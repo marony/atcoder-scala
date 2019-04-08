@@ -1,1 +1,1 @@
-# AtCoderの過去問を解いてみる In Scala
+# AtCoderを解いてみる In Scala
