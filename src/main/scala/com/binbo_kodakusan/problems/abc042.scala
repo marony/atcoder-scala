@@ -109,6 +109,76 @@ package com.binbo_kodakusan.abc042_c2 {
   }
 }
 
+package com.binbo_kodakusan.abc042_d1 {
+  // D - いろはちゃんとマス目 / Iroha and a Grid https://atcoder.jp/contests/abc042/tasks/arc058_b
+
+  import scala.io.Source
+
+  object Main extends App {
+    val xs = Source.stdin.getLines()
+    val Array(h, w, a, b) = xs.next().split(' ').map(_.toInt)
+
+    println(solve(h, w, a, b))
+
+    def solve(h: Int, w: Int, a: Int, b: Int): String = {
+      // a, bを気にせずに全探索してみる
+      var xs = List((0, 0))
+      var c = 0
+      while (true) {
+        if (xs.length <= 0)
+          return c.toString
+        val (x, y) = xs.head
+        xs = xs.tail
+        if (x < w - 1)
+          xs = (x + 1, y) +: xs
+        else if (y == h - 1)
+          c += 1
+        if (y < h - 1)
+          xs = (x, y + 1) +: xs
+        else if (x == w - 1)
+          c += 1
+//        println(s"($x, $y), $c")
+      }
+      ""
+    }
+  }
+}
+
+package com.binbo_kodakusan.abc042_d2 {
+  // D - いろはちゃんとマス目 / Iroha and a Grid https://atcoder.jp/contests/abc042/tasks/arc058_b
+
+  import scala.io.Source
+  import scala.collection.mutable
+
+  object Main extends App {
+    val xs = Source.stdin.getLines()
+    val Array(h, w, a, b) = xs.next().split(' ').map(_.toInt)
+
+    var cache: mutable.Map[(BigInt, BigInt), BigInt] = null
+    println(solve(h, w, a, b))
+
+    def tri(h: BigInt, w: BigInt): BigInt = {
+      if (h == 1)
+        1
+      else {
+        if (cache.contains((h, w))) {
+          cache((h, w))
+        } else {
+          val a = (BigInt(1) to w)
+            .foldLeft(BigInt(0))((acc, n) => acc + tri(h - BigInt(1), n))
+          cache += ((h, w) -> a)
+          a
+        }
+      }
+    }
+
+    def solve(h: Int, w: Int, a: Int, b: Int): String = {
+      cache = mutable.Map.empty[(BigInt, BigInt), BigInt]
+      tri(h, w).toString
+    }
+  }
+}
+
 package com.binbo_kodakusan.abc042_test {
 
   import scala.util.Random
@@ -149,6 +219,44 @@ package com.binbo_kodakusan.abc042_test {
 //          assert(false)
 //        }
 //      }
+//    }
+    // D - いろはちゃんとマス目 / Iroha and a Grid https://atcoder.jp/contests/abc042/tasks/arc058_b
+    // FIXME: 解けない
+    {
+      val h = 2
+      val w = 3
+      val a = 1
+      val b = 1
+      val ans = com.binbo_kodakusan.abc042_d2.Main.solve(h, w, a, b)
+      println(s"2: h = $h, w = $w, a = $a, b = $b, ans = $ans")
+    }
+    {
+      val h = 10
+      val w = 7
+      val a = 3
+      val b = 4
+      val ans = com.binbo_kodakusan.abc042_d2.Main.solve(h, w, a, b)
+      println(s"2: h = $h, w = $w, a = $a, b = $b, ans = $ans")
+      val ans2 = com.binbo_kodakusan.abc042_d2.Main.solve(a, b, a, b)
+      println(s"2: h = $h, w = $w, a = $a, b = $b, ans2 = $ans2")
+      val ans3 = com.binbo_kodakusan.abc042_d2.Main.solve(h - a, w - b, a, b)
+      println(s"2: h = $h, w = $w, a = $a, b = $b, ans3 = $ans3")
+    }
+//    {
+//      val h = 100000
+//      val w = 100000
+//      val a = 99999
+//      val b = 99999
+//      val ans = com.binbo_kodakusan.abc042_d2.Main.solve(h, w, a, b)
+//      println(s"2: h = $h, w = $w, a = $a, b = $b, ans = $ans")
+//    }
+//    {
+//      val h = 100000
+//      val w = 100000
+//      val a = 44444
+//      val b = 55555
+//      val ans = com.binbo_kodakusan.abc042_d2.Main.solve(h, w, a, b)
+//      println(s"2: h = $h, w = $w, a = $a, b = $b, ans = $ans")
 //    }
   }
 }
