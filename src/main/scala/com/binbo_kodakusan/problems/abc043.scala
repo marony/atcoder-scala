@@ -103,6 +103,50 @@ package com.binbo_kodakusan.abc043_c2 {
   }
 }
 
+package com.binbo_kodakusan.abc043_d {
+  // D - アンバランス / Unbalanced https://atcoder.jp/contests/abc043/tasks/arc059_b
+
+  import io.Source
+  import scala.collection.mutable
+
+  object Main extends App {
+    Source.stdin.getLines().foreach { s =>
+      println(solve(s))
+    }
+
+    def solve(s: String): String = {
+      // 総当り
+      (1 to s.length - 1).foreach { i =>
+        (i + 1 to s.length).foreach { j =>
+          val ss = s.substring(i - 1, j)
+//          println(s"ss = $ss, i = $i, j = $j")
+          if (check(ss)) {
+            return s"$i $j"
+          }
+        }
+      }
+      "-1 -1"
+    }
+
+    def check(s: String): Boolean = {
+      val l = s.length
+      val map = mutable.Map.empty[Char, Int]
+      s.foreach { c =>
+        if (map.contains(c)) {
+          val cc = map(c)
+//          println(s"s = $s, cc = ${cc + 1}, c = $c")
+          if (cc + 1 > l / 2)
+            return true
+          map(c) = cc + 1
+        } else {
+          map += (c -> 1)
+        }
+      }
+      false
+    }
+  }
+}
+
 package com.binbo_kodakusan.abc043_test {
 
   object Main extends App {
@@ -121,5 +165,10 @@ package com.binbo_kodakusan.abc043_test {
     assert(com.binbo_kodakusan.abc043_c2.Main.solve(Array(1, 1, 3)) == "3")
     assert(com.binbo_kodakusan.abc043_c2.Main.solve(Array(4, 2, 5)) == "5")
     assert(com.binbo_kodakusan.abc043_c2.Main.solve(Array(-100, -100, -100, -100)) == "0")
+
+    // D - アンバランス / Unbalanced https://atcoder.jp/contests/abc043/tasks/arc059_b
+    // FIXME: 大きな文字列はTLE
+    assert(com.binbo_kodakusan.abc043_d.Main.solve("needed") == "2 5")
+    assert(com.binbo_kodakusan.abc043_d.Main.solve("atcoder") == "-1 -1")
   }
 }
